@@ -40,3 +40,6 @@ terraform.rc
 
 go.mod
 go.sum
+
+# Intellij
+.idea/
