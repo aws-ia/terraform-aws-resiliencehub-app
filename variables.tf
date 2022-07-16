@@ -1,6 +1,26 @@
-variable "source_arns" {
-  type        = list(string)
-  description = "list of ARNs of AWS Resource Groups or AWS CloudFormation Stacks"
+variable "app_components" {
+  type = list(object({
+    app_component_name = string
+    app_component_type = string
+    resources = list(object({
+      resource_name            = string
+      resource_type            = string
+      resource_identifier      = string
+      resource_identifier_type = string
+    }))
+  }))
+
+  description = "The application's app-components, including its resources"
+}
+
+variable "app_name" {
+  type        = string
+  description = "The Application's name"
+}
+
+variable "s3_state_file_url" {
+  type        = string
+  description = "An URL to s3-backend Terraform state-file"
 }
 
 variable "rto" {

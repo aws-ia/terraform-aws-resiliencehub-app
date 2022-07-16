@@ -43,3 +43,4 @@ go.sum
 
 # Intellij
 .idea/
+.DS_Store
