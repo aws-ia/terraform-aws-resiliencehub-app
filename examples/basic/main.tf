@@ -70,6 +70,7 @@ module "resiliencehub_app" {
           resource_type            = "AWS::DynamoDB::Table"
           resource_identifier      = aws_dynamodb_table.ddb_table.id
           resource_identifier_type = "Native"
+          resource_region          = "us-west-2"
         }
       ]
     },
@@ -82,6 +83,7 @@ module "resiliencehub_app" {
           resource_type            = "AWS::RDS::DBInstance"
           resource_identifier      = aws_db_instance.rds_instance.id
           resource_identifier_type = "Native"
+          resource_region          = "us-west-2"
         }
       ]
     }

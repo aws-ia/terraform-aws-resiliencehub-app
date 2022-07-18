@@ -28,6 +28,7 @@ locals {
         resource_type            = resource["resource_type"]
         resource_identifier_type = resource["resource_identifier_type"]
         resource_identifier      = resource["resource_identifier"]
+        resource_region          = resource["resource_region"]
       }
     ]
   ])
@@ -50,6 +51,7 @@ locals {
       physical_resource_id = {
         identifier = resource["resource_identifier"]
         type       = resource["resource_identifier_type"]
+        aws_region = resource["resource_region"]
       }
       resource_name = resource["resource_name"]
     }

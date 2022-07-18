@@ -7,6 +7,7 @@ variable "app_components" {
       resource_type            = string
       resource_identifier      = string
       resource_identifier_type = string
+      resource_region          = string
     }))
   }))
 
