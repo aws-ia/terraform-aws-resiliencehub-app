@@ -14,14 +14,14 @@ terraform {
   required_version = ">= 0.14.9"
 
   backend "s3" {
-    bucket = "yalevy-terraform-bucket"
-    key    = "terraform/asg_multi_region.tf"
-    region = "us-west-2"
+    bucket = "$BUCKET"
+    key    = "$path/to/file.tfstate"
+    region = "$BUCKET_REGION"
   }
 }
 
 locals {
-  s3_state_file_url = "https://yalevy-terraform-bucket.s3.us-west-2.amazonaws.com/terraform/asg_multi_region.tf"
+  s3_state_file_url = "https://$BUCKET.s3.$BUCKET_REGION.amazonaws.com/$path/to/file.tfstate"
   app_name          = "Application-${random_string.session.id}"
 }
 
