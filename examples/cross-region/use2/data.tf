@@ -1,4 +1,4 @@
-data "aws_ami" "ubuntu_use2" {
+data "aws_ami" "al2_use2" {
   most_recent = true
 
   filter {
@@ -11,6 +11,6 @@ data "aws_ami" "ubuntu_use2" {
     values = ["hvm"]
   }
 
-  owners   = ["amazon"] # Canonical
+  owners   = ["amazon"]
   provider = aws.use2
 }
