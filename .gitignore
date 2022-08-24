@@ -40,3 +40,7 @@ terraform.rc
 
 go.mod
 go.sum
+
+# Intellij
+.idea/
+.DS_Store

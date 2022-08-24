@@ -1,62 +1,41 @@
 <!-- BEGIN_TF_DOCS -->
-# Creating modules for AWS I&A Organization
+# AWS Resilience Hub Application
 
-This repo template is used to seed Terraform Module templates for the [AWS I&A GitHub organization](https://github.com/aws-ia). Usage of this template is allowed per included license. PRs to this template will be considered but are not guaranteed to be included. Consider creating an issue to discuss a feature you want to include before taking the time to create a PR.
-### TL;DR
+[AWS Resilience Hub](https://aws.amazon.com/blogs/aws/monitor-and-improve-your-application-resiliency-with-resilience-hub/) is a new AWS service designed to help you define, track, and manage the resilience of your applications. \
+AWS Resilience Hub lets you define your RTO and RPO objectives for each of your applications. Then it assesses your application’s configuration to ensure it meets your requirements. It provides actionable recommendations and a resilience score to help you track your application’s resiliency progress over time.
+This Terraform module contains AWS Resilience Hub resources.
 
-1. [install pre-commit](https://pre-commit.com/)
-2. configure pre-commit: `pre-commit install`
-3. install required tools
-    - [tflint](https://github.com/terraform-linters/tflint)
-    - [tfsec](https://aquasecurity.github.io/tfsec/v1.0.11/)
-    - [terraform-docs](https://github.com/terraform-docs/terraform-docs)
-    - [golang](https://go.dev/doc/install) (for macos you can use `brew`)
-    - [coreutils](https://www.gnu.org/software/coreutils/)
+The module will be s3 state-file backed, as it is currently mandatory by Resilience Hub to onboard new terraform-Application using s3 only.\
+As a result, we must provide the module with `s3_state_file_url` where the actual resources are deployed.
 
-Write code according to [I&A module standards](https://aws-ia.github.io/standards-terraform/)
+The `app-components` variable is an object list composed of the following schema:
+```
+list(object({
+    app_component_name = string
+    app_component_type = string
+    resources = list(object({
+      resource_name            = string
+      resource_type            = string
+      resource_identifier      = string
+      resource_identifier_type = string
+      resource_region          = string
+    }))
+  }))
+```
 
-## Module Documentation
+A single app-component is composed of:
+- `app_component_name` - a unique name for each app-component   
+- `app_component_type` - one of the supported app-component types, as listed in https://docs.aws.amazon.com/resilience-hub/latest/userguide/AppComponent.grouping.html
+- `resources` - the list of resources to that are assessed together
 
-**Do not manually update README.md**. `terraform-docs` is used to generate README files. For any instructions an content, please update [.header.md](./.header.md) then simply run `terraform-docs ./` or allow the `pre-commit` to do so.
+Please refer to https://docs.aws.amazon.com/resilience-hub/latest/userguide/AppComponent.grouping.html for more details.
 
-## Terratest
-
-Please include tests to validate your examples/<> root modules, at a minimum. This can be accomplished with usually only slight modifications to the [boilerplate test provided in this template](./test/examples\_basic\_test.go)
-
-### Configure and run Terratest
-
-1. Install
-
-    [golang](https://go.dev/doc/install) (for macos you can use `brew`)
-2. Change directory into the test folder.
-    
-    `cd test`
-3. Initialize your test
-    
-    go mod init github.com/[github org]/[repository]
-
-    `go mod init github.com/aws-ia/terraform-aws-vpc`
-4. Run tidy
-
-    `git mod tidy`
-5. Install Terratest
-
-    `go get github.com/gruntwork-io/terratest/modules/terraform`
-6. Run test (You can have multiple test files).
-    - Run all tests
-
-        `go test`
-    - Run a specific test with a timeout
-
-        `go test -run examples_basic_test.go -timeout 45m`
-
-## Module Standards
-
-For best practices and information on developing with Terraform, see the [I&A Module Standards](https://aws-ia.github.io/standards-terraform/)
-
-## Continuous Integration
-
-The I&A team uses AWS CodeBuild to perform continuous integration (CI) within the organization. Our CI uses the a repo's `.pre-commit-config.yaml` file as well as some other checks. All PRs with other CI will be rejected. See our [FAQ](https://aws-ia.github.io/standards-terraform/faq/#are-modules-protected-by-ci-automation) for more details.
+A single resources is composed of:
+- `resource_name` - a unique name for each resource
+- `resource_type` - one of the supported resource types, as listed in https://docs.aws.amazon.com/resilience-hub/latest/userguide/AppComponent.grouping.html
+- `resource_identifier` - either an ARN or identifier, depends on the actual resources (some AWS resources don't support ARN, refer to docs)
+- `resource_identifier_type` - either `Native` or `Arn`, should correspond with `resource_identifier`
+- `resource_region` - the AWS region where the resource is deployed
 
 ## Requirements
 
@@ -65,10 +44,14 @@ The I&A team uses AWS CodeBuild to perform continuous integration (CI) within th
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72.0 |
 | <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | >= 0.21.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.0.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_awscc"></a> [awscc](#provider\_awscc) | >= 0.21.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | ~> 3.0.0 |
 
 ## Modules
 
@@ -76,13 +59,26 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [awscc_resiliencehub_app.app](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/resiliencehub_app) | resource |
+| [awscc_resiliencehub_resiliency_policy.policy](https://registry.terraform.io/providers/hashicorp/awscc/latest/docs/resources/resiliencehub_resiliency_policy) | resource |
+| [random_id.session](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) | resource |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_app_components"></a> [app\_components](#input\_app\_components) | The application's app-components, including its resources | <pre>list(object({<br>    app_component_name = string<br>    app_component_type = string<br>    resources = list(object({<br>      resource_name            = string<br>      resource_type            = string<br>      resource_identifier      = string<br>      resource_identifier_type = string<br>      resource_region          = string<br>    }))<br>  }))</pre> | n/a | yes |
+| <a name="input_app_name"></a> [app\_name](#input\_app\_name) | The Application's name | `string` | n/a | yes |
+| <a name="input_rpo"></a> [rpo](#input\_rpo) | RPO across all failure metrics | `number` | n/a | yes |
+| <a name="input_rto"></a> [rto](#input\_rto) | RTO across all failure metrics | `number` | n/a | yes |
+| <a name="input_s3_state_file_url"></a> [s3\_state\_file\_url](#input\_s3\_state\_file\_url) | An URL to s3-backend Terraform state-file | `string` | n/a | yes |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_app_id"></a> [app\_id](#output\_app\_id) | The application created |
+| <a name="output_policy_id"></a> [policy\_id](#output\_policy\_id) | The policy created |
 <!-- END_TF_DOCS -->
