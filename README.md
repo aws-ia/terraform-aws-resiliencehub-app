@@ -5,8 +5,8 @@
 AWS Resilience Hub lets you define your RTO and RPO objectives for each of your applications. Then it assesses your application’s configuration to ensure it meets your requirements. It provides actionable recommendations and a resilience score to help you track your application’s resiliency progress over time.
 This Terraform module contains AWS Resilience Hub resources.
 
-The module will be s3 state-file backed, as it is currently mandatory by Resilience Hub to onboard new terraform-Application using s3 only.\
-As a result, we must provide the module with `s3_state_file_url` where the actual resources are deployed.
+The resources that make up the application tracked by [AWS Resilience Hub](https://aws.amazon.com/blogs/aws/monitor-and-improve-your-application-resiliency-with-resilience-hub) must be managed in a tfstate file that [exists in S3](https://www.terraform.io/language/settings/backends/s3). This is a requirement of the service. As such, the argument `s3_state_file_url` is required and must point to the tfstate file where the resources are managed.
+If possible, our recommendation is to maintain your application deployment in the same [root module](https://www.terraform.io/docs/glossary#root-module) as the Resilience Hub app definition deployment. See our [basic example](https://github.com/aws-ia/terraform-aws-resiliencehub-app/tree/main/examples).
 
 The `app-components` variable is an object list composed of the following schema:
 ```
@@ -44,14 +44,14 @@ A single resources is composed of:
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72.0 |
 | <a name="requirement_awscc"></a> [awscc](#requirement\_awscc) | >= 0.21.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.0.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | ~> 3.5.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_awscc"></a> [awscc](#provider\_awscc) | >= 0.21.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | ~> 3.0.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | ~> 3.5.0 |
 
 ## Modules
 
