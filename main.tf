@@ -85,6 +85,11 @@ resource "awscc_resiliencehub_app" "app" {
   })
   resource_mappings     = local.resource_mappings
   resiliency_policy_arn = awscc_resiliencehub_resiliency_policy.policy.policy_arn
+  permission_model = {
+    type                    = var.permission_type
+    cross_account_role_arns = var.cross_account_role_arns
+    invoker_role_name       = var.invoker_role_name
+  }
 }
 
 resource "awscc_resiliencehub_resiliency_policy" "policy" {

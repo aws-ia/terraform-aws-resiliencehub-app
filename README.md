@@ -71,9 +71,12 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_components"></a> [app\_components](#input\_app\_components) | The application's app-components, including its resources | <pre>list(object({<br>    app_component_name = string<br>    app_component_type = string<br>    resources = list(object({<br>      resource_name            = string<br>      resource_type            = string<br>      resource_identifier      = string<br>      resource_identifier_type = string<br>      resource_region          = string<br>    }))<br>  }))</pre> | n/a | yes |
 | <a name="input_app_name"></a> [app\_name](#input\_app\_name) | The Application's name | `string` | n/a | yes |
+| <a name="input_permission_type"></a> [permission\_type](#input\_permission\_type) | How AWS Resilience Hub should scan the resources. Either `LegacyIAMUser` or `RoleBased` | `string` | n/a | yes |
 | <a name="input_rpo"></a> [rpo](#input\_rpo) | RPO across all failure metrics | `number` | n/a | yes |
 | <a name="input_rto"></a> [rto](#input\_rto) | RTO across all failure metrics | `number` | n/a | yes |
 | <a name="input_s3_state_file_url"></a> [s3\_state\_file\_url](#input\_s3\_state\_file\_url) | An URL to s3-backend Terraform state-file | `string` | n/a | yes |
+| <a name="input_cross_account_role_arns"></a> [cross\_account\_role\_arns](#input\_cross\_account\_role\_arns) | The list of IAM Role ARNs to be used for querying purposes in other AWS accounts while importing resources and assessing your appliaction | `list(string)` | `[]` | no |
+| <a name="input_invoker_role_name"></a> [invoker\_role\_name](#input\_invoker\_role\_name) | The IAM role name that will be used by AWS Resilience Hub for read-only access to the application resources while running an assessment | `string` | `null` | no |
 
 ## Outputs
 

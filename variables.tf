@@ -33,3 +33,19 @@ variable "rpo" {
   type        = number
   description = "RPO across all failure metrics"
 }
+
+variable "permission_type" {
+  description = "How AWS Resilience Hub should scan the resources. Either `LegacyIAMUser` or `RoleBased`"
+  type        = string
+}
+
+variable "invoker_role_name" {
+  description = "The IAM role name that will be used by AWS Resilience Hub for read-only access to the application resources while running an assessment"
+  type        = string
+  default     = null
+}
+variable "cross_account_role_arns" {
+  description = "The list of IAM Role ARNs to be used for querying purposes in other AWS accounts while importing resources and assessing your appliaction"
+  type        = list(string)
+  default     = []
+}
