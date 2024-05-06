@@ -2,9 +2,9 @@
 # borrowed & modified indefinitely from https://github.com/ksatirli/building-infrastructure-you-can-mostly-trust/blob/main/.tflint.hcl
 
 plugin "aws" {
-  enabled = true
-  version = "0.14.0"
-  source  = "github.com/terraform-linters/tflint-ruleset-aws"
+    enabled = true
+    version = "0.31.0"
+    source  = "github.com/terraform-linters/tflint-ruleset-aws"
 }
 
 config {

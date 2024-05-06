@@ -85,27 +85,35 @@ resource "awscc_resiliencehub_app" "app" {
   })
   resource_mappings     = local.resource_mappings
   resiliency_policy_arn = awscc_resiliencehub_resiliency_policy.policy.policy_arn
+
+  tags = {
+    "terraform" = "managed"
+  }
 }
 
 resource "awscc_resiliencehub_resiliency_policy" "policy" {
   policy_name = "Policy-${random_id.session.id}"
   tier        = "MissionCritical"
   policy = {
-    AZ = {
+    az = {
       rto_in_secs = var.rto
       rpo_in_secs = var.rpo
     }
-    Hardware = {
+    hardware = {
       rto_in_secs = var.rto
       rpo_in_secs = var.rpo
     }
-    Software = {
+    software = {
       rto_in_secs = var.rto
       rpo_in_secs = var.rpo
     }
-    Region = {
+    region = {
       rto_in_secs = var.rto
       rpo_in_secs = var.rpo
     }
+  }
+
+  tags = {
+    "terraform" = "managed"
   }
 }
