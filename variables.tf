@@ -2,7 +2,7 @@ variable "app_components" {
   type = list(object({
     app_component_name = string
     app_component_type = string
-    resources = list(object({
+    resources          = list(object({
       resource_name            = string
       resource_type            = string
       resource_identifier      = string
@@ -32,4 +32,9 @@ variable "rto" {
 variable "rpo" {
   type        = number
   description = "RPO across all failure metrics"
+}
+
+variable "arh_role_name" {
+  type        = string
+  description = "Defines the role to be used by Resilience Hub"
 }
